@@ -11,5 +11,5 @@ class Like(Base):
     user_id = Column(Integer)
     is_active = Column(Boolean, default=True)
     is_deleted = Column(Boolean, default=False)
-    created_at = Column(DateTime , default=datetime)
-    updated_at = Column(DateTime, default=datetime)
+    created_at = Column(DateTime , default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())

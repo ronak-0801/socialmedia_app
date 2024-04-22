@@ -13,7 +13,7 @@ class User(Base):
     bio = Column(String)
     dob = Column(Date)
     created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
     is_active = Column(Boolean, default=True)
     is_deleted = Column(Boolean, default=False)
     posts = relationship('Posts', back_populates="user")

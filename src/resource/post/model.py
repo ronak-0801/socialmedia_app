@@ -13,8 +13,8 @@ class Posts(Base):
     user = relationship("User", back_populates="posts")
     is_active = Column(Boolean, default=True)
     is_deleted = Column(Boolean, default=False)
-    created_at = Column(DateTime , default=datetime)
-    updated_at = Column(DateTime, default=datetime)
-    # comment = Column(JSON)
+    created_at = Column(DateTime , default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+
 
 
