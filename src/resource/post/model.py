@@ -1,4 +1,5 @@
 from database import Base
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Boolean , ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -12,8 +13,8 @@ class Posts(Base):
     user = relationship("User", back_populates="posts")
     is_active = Column(Boolean, default=True)
     is_deleted = Column(Boolean, default=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime , default=datetime)
+    updated_at = Column(DateTime, default=datetime)
     # comment = Column(JSON)
 
 

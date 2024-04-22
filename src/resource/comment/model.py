@@ -1,5 +1,6 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey,Boolean,DateTime
 from sqlalchemy.orm import relationship,backref
 
 class Post_comment(Base):
@@ -9,4 +10,8 @@ class Post_comment(Base):
     post_id = Column(Integer, ForeignKey('Posts.id'))
     cmnt = relationship("Posts", backref="comments")
     user_id = Column(Integer)
+    is_active = Column(Boolean, default=True)
+    is_deleted = Column(Boolean, default=False)
+    created_at = Column(DateTime , default=datetime)
+    updated_at = Column(DateTime, default=datetime)
 

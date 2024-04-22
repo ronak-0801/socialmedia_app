@@ -1,5 +1,6 @@
 from database import Base
-from sqlalchemy import Column, Integer, ForeignKey
+from datetime import datetime
+from sqlalchemy import Column, Integer, ForeignKey, Boolean,DateTime
 from sqlalchemy.orm import relationship
 
 class Like(Base):
@@ -8,3 +9,7 @@ class Like(Base):
     post_user_id = Column(Integer,ForeignKey("Posts.id"))
     like = relationship("Posts", backref="Likesofposts")
     user_id = Column(Integer)
+    is_active = Column(Boolean, default=True)
+    is_deleted = Column(Boolean, default=False)
+    created_at = Column(DateTime , default=datetime)
+    updated_at = Column(DateTime, default=datetime)
