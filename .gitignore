@@ -175,7 +175,5 @@ test.db
 
 venv
 
-.env_example
-
 lambda_package
 etl-source-management.zip
