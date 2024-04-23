@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+
+__pycache__
+
 *.py[cod]
 *$py.class
 
@@ -169,6 +172,10 @@ lambda_function.zip
 credentials.json
 test.db
 .env
+
 venv
+
+.env_example
+
 lambda_package
 etl-source-management.zip
