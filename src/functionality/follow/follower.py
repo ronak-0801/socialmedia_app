@@ -4,7 +4,7 @@ from database import get_db
 from src.resource.follow.model import Follower
 from src.resource.user.model import User
 
-def add_follower(following_user:int, followed_to:int, db:session=Depends(get_db)):
+def add_follower( followed_to:int,following_user:int, db:session=Depends(get_db)):
     follower = Follower(followed_to= followed_to,following_by = following_user)
 
     db.add(follower) 

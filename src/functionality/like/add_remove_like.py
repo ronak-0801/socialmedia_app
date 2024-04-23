@@ -5,7 +5,8 @@ from fastapi import Depends
 from database import get_db
 
 
-def add_like(user_id:int,post_id:int ,db:session=Depends(get_db)):
+
+def add_like(post_id:int,user_id:int ,db:session=Depends(get_db)):
     post = db.query(Posts).filter(Posts.id == post_id).first()
     user = post.id
     post_like = db.query(Like).filter(Like.user_id == user_id , Like.post_user_id == post_id).first()

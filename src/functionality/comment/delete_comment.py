@@ -6,7 +6,7 @@ from fastapi import Depends
 from database import get_db
 
 
-def deleting_comment(user_id:int,comment_id:int, db:session=Depends(get_db)):
+def deleting_comment(comment_id:int,user_id:int, db:session=Depends(get_db)):
     comment = db.query(Post_comment).filter(Post_comment.id == comment_id).first()
 
     if comment :

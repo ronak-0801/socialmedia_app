@@ -4,6 +4,7 @@ from sqlalchemy.orm import session
 from src.resource.user.schema import User_schema
 from src.functionality.register_user.user_registration import register_user
 
+
 user_route = APIRouter()
 
 Base.metadata.create_all(bind=engine)   

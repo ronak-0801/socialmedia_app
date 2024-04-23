@@ -1,8 +1,8 @@
 """v_01
 
-Revision ID: b793e81a0536
+Revision ID: 25c444420bff
 Revises: 
-Create Date: 2024-04-19 16:30:54.246532
+Create Date: 2024-04-23 17:19:38.429810
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'b793e81a0536'
+revision: str = '25c444420bff'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -45,15 +45,31 @@ def upgrade() -> None:
     sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('comment', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['uid'], ['User.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_Posts_id'), 'Posts', ['id'], unique=False)
+    op.create_table('follower',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('followed_to', sa.Integer(), nullable=True),
+    sa.Column('following_by', sa.Integer(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['followed_to'], ['User.id'], ),
+    sa.ForeignKeyConstraint(['following_by'], ['User.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_follower_id'), 'follower', ['id'], unique=False)
     op.create_table('Likesofposts',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('post_user_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['post_user_id'], ['Posts.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -63,6 +79,10 @@ def upgrade() -> None:
     sa.Column('comment', sa.String(), nullable=True),
     sa.Column('post_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['post_id'], ['Posts.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -76,6 +96,8 @@ def downgrade() -> None:
     op.drop_table('comments')
     op.drop_index(op.f('ix_Likesofposts_id'), table_name='Likesofposts')
     op.drop_table('Likesofposts')
+    op.drop_index(op.f('ix_follower_id'), table_name='follower')
+    op.drop_table('follower')
     op.drop_index(op.f('ix_Posts_id'), table_name='Posts')
     op.drop_table('Posts')
     op.drop_index(op.f('ix_User_id'), table_name='User')
