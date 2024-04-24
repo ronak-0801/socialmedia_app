@@ -35,28 +35,29 @@ def generate_otp(length=6):
 
 '''user registration'''
 def register_user(request:User_schema,db:session=Depends(get_db)):
+    try:
+        existing_user = db.query(User).filter(User.email == request.email).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email address already registered")
+        
+        hashed_password = pwd_context.hash(request.password)
+        user = User(name=request.name, email=request.email, password=hashed_password, gender=request.gender, bio=request.bio, dob=request.dob)
 
-    existing_user = db.query(User).filter(User.email == request.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email address already registered")
-    
+        db.add(user)
+        
+        otp = generate_otp()
+        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
+        db_otp = Otp(email=request.email, otp=otp, expiration_time=expiration_time)
+        db.add(db_otp)
 
-    hashed_password = pwd_context.hash(request.password)
-    user = User(name = request.name, email = request.email, password = hashed_password, gender = request.gender,bio=request.bio,dob=request.dob)
+        db.commit() 
 
-    db.add(user)
-    
-    otp = generate_otp()
-    expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
-    db_otp = Otp(email=request.email, otp=otp, expiration_time=expiration_time)
-    db.add(db_otp)
+        send_verification_email(request.email, otp)
 
-    db.commit() 
-
-    send_verification_email(request.email, otp)
-
-    return {"message": "User registered. Verification email sent."}
-
+        return {"message": "User registered. Verification email sent."}
+    except Exception as e:
+        print("Error registering user:", e)
+        raise HTTPException(status_code=500, detail="Failed to register user")
 
 
 
@@ -64,37 +65,41 @@ def register_user(request:User_schema,db:session=Depends(get_db)):
 '''user login'''
 def user_login(form_data: UserLoginSchema, db = Depends(get_db)):
 
-    user = db.query(User).filter(User.name == form_data.username, User.is_deleted == False).first()
-    if user:
-        if not user.is_active:
-            raise HTTPException(status_code=403, detail="User account is deactivated")
-        
-        if not user or not verify_password(form_data.password, user.password):
-            raise HTTPException(status_code=401, detail="Incorrect email or password")
-        
+    try:
+        user = db.query(User).filter(User.name == form_data.username, User.is_deleted == False).first()
+        if user:
+            if not user.is_active:
+                raise HTTPException(status_code=403, detail="User account is deactivated")
+            
+            if not user or not verify_password(form_data.password, user.password):
+                raise HTTPException(status_code=401, detail="Incorrect email or password")
+            
+            access_token = create_access_token(user.id)
+            refresh_token = create_refresh_token(user.id)
+            return {"access_token": access_token, "refresh_token": refresh_token}
+        else:
+            return "User not found"
+    except Exception as e:
+        print("Error during user login:", e)
+        raise HTTPException(status_code=500, detail="Failed to login user")
 
-        access_token = create_access_token(user.id)
-        refresh_token = create_refresh_token(user.id)
-        return {"access_token": access_token, "refresh_token":refresh_token}
-    else:
-        return "User not found"
 
 
-'''Soft_delete'''
+'''delete'''
 def delete(user_id , db = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user.is_deleted = True
+        user.is_active = False
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    user.is_deleted = True
-    user.is_active = False
-
-
-    db.commit()
-    return {"message": "User deleted successfully"}
-
-
+        db.commit()
+        return {"message": "User deleted successfully"}
+    except Exception as e:
+        print("Error deleting user:", e)
+        raise HTTPException(status_code=500, detail="Failed to delete user")
 
 
 '''token creation'''
@@ -167,11 +172,17 @@ def send_email(subject: str, body: str, to_email: str):
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
 
-    # Send email
-    with smtplib.SMTP(smtp_server, smtp_port) as server:
-        server.starttls()
-        server.login(smtp_username, smtp_password)
-        server.sendmail(from_email, to_email, msg.as_string())
+    
+    try:
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.sendmail(from_email, to_email, msg.as_string())
+    except Exception as e:
+        print("Error sending email:", e)
+        raise HTTPException(status_code=500, detail="Failed to send email")
+
 
 def send_verification_email(user_email, otp):
     email_subject = "Email Verification"
@@ -179,18 +190,22 @@ def send_verification_email(user_email, otp):
     send_email(email_subject, email_body, user_email)
 
 def verify_email_with_otp(email: str, otp: str, db: session):
-    user_otp = db.query(Otp).filter(Otp.email == email, Otp.otp == otp).first()
-    if user_otp and not user_otp.is_expired():
-        user = db.query(User).filter(User.email == email).first()
-        if user:
-            user.is_email_verified = True
-            user.is_active = True
-            access_token = create_access_token(user.id) 
-            refresh_token = create_refresh_token(user.id)
-            db.delete(user_otp)
-            db.commit()
-            return  {"success": True, "access_token": access_token, "refresh_token": refresh_token}
+    try:
+        user_otp = db.query(Otp).filter(Otp.email == email, Otp.otp == otp).first()
+        if user_otp and not user_otp.is_expired():
+            user = db.query(User).filter(User.email == email).first()
+            if user:
+                user.is_email_verified = True
+                user.is_active = True
+                access_token = create_access_token(user.id) 
+                refresh_token = create_refresh_token(user.id)
+                db.delete(user_otp)
+                db.commit()
+                return {"success": True, "access_token": access_token, "refresh_token": refresh_token}
+            else:
+                return False
         else:
             return False
-    else:
-        return False
+    except Exception as e:
+        print("Error verifying email with OTP:", e)
+        raise HTTPException(status_code=500, detail="Failed to verify email with OTP")
