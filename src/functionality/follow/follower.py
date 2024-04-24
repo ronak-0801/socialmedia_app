@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy.orm import session
 from database import get_db
 from src.resource.follow.model import Follower
-from src.resource.user.model import User
+from src.resource.authentication.model import User
 
 def add_follower( followed_to:int,following_user:int, db:session=Depends(get_db)):
     follower = Follower(followed_to= followed_to,following_by = following_user)

@@ -2,7 +2,7 @@ from fastapi import APIRouter,Depends
 from sqlalchemy.orm import session
 from database import get_db,engine, Base
 from src.functionality.like.add_remove_like import add_like
-from src.functionality.register_user.authentication import get_user_id
+from src.functionality.authentication.authentication import get_user_id
 
 like_route = APIRouter()
 Base.metadata.create_all(bind=engine) 

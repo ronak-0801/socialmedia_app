@@ -2,7 +2,7 @@ from fastapi import APIRouter,Depends
 from sqlalchemy.orm import session
 from database import engine,Base,get_db
 from src.functionality.follow.follower import add_follower,show_follower,show_following
-from src.functionality.register_user.authentication import get_user_id
+from src.functionality.authentication.authentication import get_user_id
 
 
 follow_route = APIRouter()

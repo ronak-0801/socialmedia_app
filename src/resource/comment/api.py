@@ -4,7 +4,7 @@ from database import get_db,engine, Base
 from src.resource.comment.schema import Comment_schema
 from src.functionality.comment.add_comment import adding_comment
 from src.functionality.comment.delete_comment import deleting_comment
-from src.functionality.register_user.authentication import get_user_id
+from src.functionality.authentication.authentication import get_user_id
 
 
 comment_route = APIRouter()

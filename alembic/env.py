@@ -8,7 +8,7 @@ from src.config import Config
 from src.resource.post.model import Posts
 from src.resource.comment.model import Post_comment
 from src.resource.like.model import Like
-from src.resource.user.model import User
+from src.resource.authentication.model import User,Otp
 from src.resource.follow.model import Follower
 
 

@@ -1,7 +1,7 @@
 from database import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey,Boolean,DateTime
-from sqlalchemy.orm import relationship,backref
+from sqlalchemy.orm import relationship
 
 class Post_comment(Base):
     __tablename__ = "comments"
