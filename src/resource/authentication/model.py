@@ -31,7 +31,7 @@ class Otp(Base):
 
 
 class PasswordReset(Base):
-    __tablename__ = "password_reset"
+    __tablename__ = "PasswordReset"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     token = Column(String, unique=True, index=True)
