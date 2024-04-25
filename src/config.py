@@ -8,3 +8,8 @@ class Config:
     secrate_key = os.getenv("SECRET_KEY")
     algorithm = os.getenv("ALGORITHM")
     access_token_expiration = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    from_email = os.getenv("EMAIL")
+    smtp_server = os.getenv("SMTP_SERVER")
+    smtp_port = os.getenv("SMTP_PORT")
+    smtp_username = os.getenv("SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")

@@ -17,3 +17,12 @@ class UserLoginSchema(BaseModel):
 class Email_schema(BaseModel):
     email:str
     otp:int
+
+
+class PasswordResetSchema(BaseModel):
+    email: str
+    token: str
+    new_password: str
+
+class Passwordtokenschema(BaseModel):
+    email : str

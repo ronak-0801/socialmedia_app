@@ -7,30 +7,33 @@ from database import get_db
 
 
 def deleting_comment(comment_id:int,user_id:int, db:session=Depends(get_db)):
-    comment = db.query(Post_comment).filter(Post_comment.id == comment_id).first()
-
-    if comment :
-        if comment.user_id == user_id:
-            db.delete(comment)
-            db.commit()
-        
-            return "Comment deleted by comment user" 
-        else:
-
-            user_id_ofpost = db.query(Posts).filter(Posts.id == comment.post_id).first()
-            if user_id_ofpost:
-                if user_id_ofpost.uid == user_id:
-                    db.delete(comment)
-                    db.commit()
-                    return "Comment deleted by post user"
-                else:
-                    return "User of post not exist"
+    try:
+        comment = db.query(Post_comment).filter(Post_comment.id == comment_id).first()
+        if comment :
+            if comment.user_id == user_id:
+                db.delete(comment)
+                db.commit()
+            
+                return "Comment deleted by comment user" 
             else:
-                return "Post not exist"
-    else:
-         return "comment does not exist for deleting"
+
+                user_id_ofpost = db.query(Posts).filter(Posts.id == comment.post_id).first()
+                if user_id_ofpost:
+                    if user_id_ofpost.uid == user_id:
+                        db.delete(comment)
+                        db.commit()
+                        return "Comment deleted by post user"
+                    else:
+                        return "User of post not exist"
+                else:
+                    return "Post not exist"
+        else:
+            return "comment does not exist for deleting"
+    except Exception as e:
+        print("error in deleting comment",e)
+        raise
 
 
 
 
-        
+            

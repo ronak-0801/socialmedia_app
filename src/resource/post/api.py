@@ -4,7 +4,7 @@ from database import get_db,engine, Base
 from src.resource.post.schema import Post_schema
 from src.functionality.post.add_post import add_posts
 from src.functionality.post.show_post import post_from_user
-from src.functionality.authentication.authentication import get_user_id
+from src.utils.utils import get_user_id
 
 post_route = APIRouter()
 Base.metadata.create_all(bind=engine) 

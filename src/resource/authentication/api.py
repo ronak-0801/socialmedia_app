@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends,HTTPException
 from database import get_db,engine,Base
 from sqlalchemy.orm import session
 from src.resource.authentication.model import User
-from src.resource.authentication.schema import User_schema,UserLoginSchema,Email_schema
-from src.functionality.authentication.authentication import register_user,user_login,create_access_token_from_refresh_token,get_user_id_from_refresh_token,get_user_id,delete,verify_email_with_otp
+from src.resource.authentication.schema import User_schema,UserLoginSchema,Email_schema,PasswordResetSchema,Passwordtokenschema
+from src.functionality.authentication.authentication import register_user,user_login,delete,verify_email_with_otp,password_reset,generate_password_reset_token
+from src.utils.utils import create_access_token_from_refresh_token,get_user_id_from_refresh_token,get_user_id
 
 auth_route = APIRouter()
 Base.metadata.create_all(bind=engine)   
@@ -43,3 +44,12 @@ def verify_email_endpoint(data:Email_schema ,db: session = Depends(get_db)):
         }
     else:
         raise HTTPException(status_code=404, detail="Invalid token")
+
+@auth_route.post("/password_reset_token")
+def generate_password_token(request:Passwordtokenschema, db: session = Depends(get_db)):
+    email = request.email
+    return generate_password_reset_token(email, db)
+
+@auth_route.post("/password_reset")
+def reset_password(request: PasswordResetSchema, db: session = Depends(get_db)):
+    return password_reset(request, db)

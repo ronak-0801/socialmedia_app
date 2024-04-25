@@ -8,11 +8,15 @@ from src.resource.comment.model import Post_comment
 
 
 def adding_comment(request:Comment_schema,post_id:int,user_id:int,db:session=Depends(get_db)):
-    post = db.query(Posts).filter(Posts.id == post_id).first()
-    post.comment = {user_id:request.comment}
-    comments = Post_comment(comment= request.comment, user_id = user_id,post_id = post_id)
-    db.add(comments)
-    db.commit()
-    db.refresh(comments)
+    try:
+        post = db.query(Posts).filter(Posts.id == post_id).first()
+        post.comment = {user_id:request.comment}
+        comments = Post_comment(comment= request.comment, user_id = user_id,post_id = post_id)
+        db.add(comments)
+        db.commit()
+        db.refresh(comments)
 
-    return "Comments added successfully"
+        return "Comments added successfully"
+    except Exception as e:
+        print("Failed to add comment ",e)
+        raise
