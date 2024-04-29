@@ -2,7 +2,6 @@ from fastapi import Header, HTTPException
 import jwt 
 import datetime 
 from src.config import Config
-
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,7 +9,6 @@ from email.mime.text import MIMEText
 
 SECRET_KEY = Config.secrate_key
 ALGORITHM = Config.algorithm
-ACCESS_TOKEN_EXPIRE_MINUTES = Config.access_token_expiration
 
 '''token creation'''
 def create_access_token(user_id):
@@ -19,7 +17,7 @@ def create_access_token(user_id):
             "user_id":user_id,
             "token_type":"access"
         }
-        expire = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+        expire = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         to_encode.update({"exp": expire})
         access_token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return access_token
