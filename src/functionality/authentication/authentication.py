@@ -1,4 +1,6 @@
 from fastapi import  Depends, HTTPException
+from sqlalchemy.exc import IntegrityError  # Import the specific exception type
+
 from database import get_db
 from sqlalchemy.orm import session
 from fastapi.security import OAuth2PasswordBearer
@@ -47,7 +49,7 @@ def register_user(request:User_schema,db:session=Depends(get_db)):
 
         return {"message": "User registered. Verification email sent."}
     
-    except Exception as e:
+    except IntegrityError as e:
         print("Error registering user:", e)
         raise HTTPException(status_code=500, detail="Failed to register user")
 
