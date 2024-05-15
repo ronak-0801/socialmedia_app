@@ -14,7 +14,7 @@ class User(Base):
     dob = Column(Date)
     created_at = Column(DateTime, default=datetime.datetime.now())
     updated_at = Column(DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
-    is_active = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
     is_deleted = Column(Boolean, default=False)
     posts = relationship('Posts', back_populates="user")
     is_email_verified = Column(Boolean, default=False)
