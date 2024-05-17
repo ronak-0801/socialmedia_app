@@ -8,7 +8,7 @@ from .seeding import Users_factory
 from .db import engine, TestingSessionLocal
 from pytest_factoryboy import register
 from src.app import app
-from src.utils.utils import create_access_token
+from src.utils.utils import create_access_token,create_access_token_from_refresh_token
 
 register(Users_factory)
 
@@ -88,3 +88,4 @@ def auth_headers(request):
         "Authorization": f"Bearer {token}"
     }
     return headers
+

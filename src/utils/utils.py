@@ -45,7 +45,7 @@ def create_access_token_from_refresh_token(user_id):
         new_access_token = create_access_token(user_id)
         return {"new_access_token": new_access_token}
     except Exception as e:
-        print("Eroor in crsting access token from refresh token",e)
+        print("Error in creating access token from refresh token",e)
         raise
 
 
