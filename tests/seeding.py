@@ -1,11 +1,7 @@
 # seeding.py
 
-# from database import Base
 import factory
 from faker import Factory as FakerFactory
-
-from sqlalchemy.orm import Session
-from .db import  TestingSessionLocal
 from src.resource.authentication.model import User
 from factory.faker import Faker
 from pytest_factoryboy import register
