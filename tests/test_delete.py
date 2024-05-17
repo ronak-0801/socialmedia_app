@@ -21,4 +21,12 @@ def test_delete_user(seed, auth_headers):
     print(response.json())
     assert response.status_code == 200
 
-    # assert "User deleted successfully" == data["message"]
+    assert "User deleted successfully" == data["message"]
+
+
+def test_delete_user_not_found(auth_headers):
+    # Pass a user ID that doesn't exist in the database
+    response = client.delete('/delete_user', headers=auth_headers)
+
+    assert response.json()["detail"] == "User not found"
+    assert response.json()["status_code"] == 404

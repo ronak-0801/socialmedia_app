@@ -82,19 +82,17 @@ def user_login(form_data: UserLoginSchema, db = Depends(get_db)):
 '''delete'''
 def delete(user_id , db = Depends(get_db)):
     try:
-        check_delete = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
-        if check_delete:
-            user = db.query(User).filter(User.id == user_id).first()
-            if not user:
-                raise HTTPException(status_code=404, detail="User not found")
-            
+        user = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
+        if user:
+
             user.is_deleted = True
             user.is_active = False
 
             db.commit()
             return {"message": "User deleted successfully"}
         else:
-            return "User is already deleted"
+            return HTTPException(status_code=404, detail="User not found")  
+            # return {"msg" : "user not found"}, 404      
     except Exception as e:
         print("Error deleting user:", e)
         raise HTTPException(status_code=500, detail="Failed to delete user")
