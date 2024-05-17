@@ -14,7 +14,7 @@ register(Users_factory)
 
 
 @pytest.fixture(scope="function")
-def persistent_db_session() -> Session:
+def persistent_db_session() -> Session: # type: ignore
     session = TestingSessionLocal()
     try:
         yield session
@@ -81,8 +81,8 @@ def seed(request: pytest.FixtureRequest, persistent_db_session: Session):
 
 
 @pytest.fixture
-def auth_headers():
-    user_id = 1# The ID of the user you want to authenticate as
+def auth_headers(request):
+    user_id = request.param
     token = create_access_token(user_id)
     headers = {
         "Authorization": f"Bearer {token}"

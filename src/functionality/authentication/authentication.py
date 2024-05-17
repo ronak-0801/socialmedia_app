@@ -92,7 +92,6 @@ def delete(user_id , db = Depends(get_db)):
             return {"message": "User deleted successfully"}
         else:
             return HTTPException(status_code=404, detail="User not found")  
-            # return {"msg" : "user not found"}, 404      
     except Exception as e:
         print("Error deleting user:", e)
         raise HTTPException(status_code=500, detail="Failed to delete user")

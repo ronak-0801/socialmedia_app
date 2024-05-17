@@ -14,6 +14,8 @@ client = TestClient(app)
         SHARED_SEED_DATA_USER_DATA["users"],
     ),
 )
+@pytest.mark.parametrize('auth_headers', [1], indirect=True)
+
 def test_delete_user(seed, auth_headers):
     response = client.delete('/delete_user',headers=auth_headers)
     data = response.json()
@@ -24,9 +26,16 @@ def test_delete_user(seed, auth_headers):
     assert "User deleted successfully" == data["message"]
 
 
-def test_delete_user_not_found(auth_headers):
-    # Pass a user ID that doesn't exist in the database
+@pytest.mark.seed_data(
+    (
+        "users",
+        SHARED_SEED_DATA_USER_DATA["users"],
+    ),
+)
+@pytest.mark.parametrize('auth_headers', [2000], indirect=True)
+def test_delete_user_not_found(seed, auth_headers):
     response = client.delete('/delete_user', headers=auth_headers)
 
+    assert response.status_code == 200
     assert response.json()["detail"] == "User not found"
     assert response.json()["status_code"] == 404
