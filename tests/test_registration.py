@@ -13,7 +13,7 @@ client = TestClient(app)
 def get_user_data():
     user_data = {
             "name":"deadpool",
-            "email": "deadpoo0l@example.com",
+            "email": "ronakbabariya555@gmail.com",
             "password": "chimichangas4life",
             "dob": "2024-05-14",
     }
@@ -39,7 +39,7 @@ def test_duplicate_email():
     
     duplicate_user_data = {
         "name": "Another User",
-        "email": "deadpoo0l@example.com",
+        "email": "ronakbabariya555@gmail.com",
         "password": "password789",
         "dob": "2000-01-01"
     }

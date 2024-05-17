@@ -112,6 +112,7 @@ def send_verification_email(user_email, otp):
 def verify_email_with_otp(email: str, otp: str, db: session):
     try:
         user_otp = db.query(Otp).filter(Otp.email == email, Otp.otp == otp).first()
+
         if user_otp and not user_otp.is_expired():
             user = db.query(User).filter(User.email == email).first()
             if user:
@@ -123,9 +124,9 @@ def verify_email_with_otp(email: str, otp: str, db: session):
                 db.commit()
                 return {"success": True, "access_token": access_token, "refresh_token": refresh_token}
             else:
-                return False
+                return {"success":False}
         else:
-            return False
+            return {"success":False}
     except Exception as e:
         print("Error verifying email with OTP:", e)
         raise HTTPException(status_code=500, detail="Failed to verify email with OTP")

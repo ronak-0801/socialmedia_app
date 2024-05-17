@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 import pytest
 
 from src.app import app
-from .data import SHARED_SEED_DATA_USER_DATA
+from .data import SHARED_SEED_DATA
 
 client = TestClient(app)
 
@@ -11,7 +11,7 @@ client = TestClient(app)
 @pytest.mark.seed_data(
     (
         "users",
-        SHARED_SEED_DATA_USER_DATA["users"],
+        SHARED_SEED_DATA["users"],
     ),
 )
 @pytest.mark.parametrize('auth_headers', [1], indirect=True)
@@ -29,7 +29,7 @@ def test_delete_user(seed, auth_headers):
 @pytest.mark.seed_data(
     (
         "users",
-        SHARED_SEED_DATA_USER_DATA["users"],
+        SHARED_SEED_DATA["users"],
     ),
 )
 @pytest.mark.parametrize('auth_headers', [2000], indirect=True)

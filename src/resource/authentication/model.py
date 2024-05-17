@@ -24,10 +24,10 @@ class Otp(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String)
     otp = Column(Integer)
-    expiration_time = Column(DateTime)
+    expiration_time = Column(DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=1))
 
     def is_expired(self):
-        return datetime.datetime.now() > self.expiration_time
+        return datetime.datetime.utcnow() > self.expiration_time
 
 
 class PasswordReset(Base):

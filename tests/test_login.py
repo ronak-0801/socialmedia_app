@@ -1,14 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
 from src.app import app
-from .data import SHARED_SEED_DATA_USER_DATA
+from .data import SHARED_SEED_DATA
 
 client = TestClient(app) 
 
 @pytest.mark.seed_data(
     (
         "users",
-        SHARED_SEED_DATA_USER_DATA["users"],
+        SHARED_SEED_DATA["users"],
     ),
 )
 def test_login(seed):

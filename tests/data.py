@@ -1,3 +1,4 @@
+import datetime
 import pytest
 import bcrypt
 
@@ -10,8 +11,8 @@ def hash_password(password: str) -> str:
     return hashed.decode("utf-8")
 
 
-SHARED_SEED_DATA_USER_DATA= {
-    "users": [
+SHARED_SEED_DATA= {
+    "users":[
         {
             "id": 1,
             "name": "user1",
@@ -22,5 +23,23 @@ SHARED_SEED_DATA_USER_DATA= {
             "name": "user2",
             "email": "user2@example.com",
             "password":hash_password("abcd")
-        }]
+        },
+        {
+            "id": 3,
+            "name": "user3",
+            "email": "user3@example.com",
+            "password":hash_password("abcd")
+        }],
+        "otps": [
+        {
+            "email": "user1@example.com",
+            "otp": "123456",
+            "expiration_time": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)  
+        },
+        {
+            "email": "user2@example.com",
+            "otp": "123456",
+            "expiration_time": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)  
+        }
+    ]
 }
