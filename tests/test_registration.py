@@ -48,6 +48,7 @@
 #     assert response.status_code == 400
 #     assert "Email address already registered" in response.json()["detail"]
 
+
 # '''checking if the data entered while registration was missing any field'''
 # def test_invalid_data():
 #     invalid_user_data = {

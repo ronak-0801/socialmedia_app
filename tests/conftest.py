@@ -8,6 +8,7 @@ from .seeding import Users_factory
 from .db import engine, TestingSessionLocal
 from pytest_factoryboy import register
 from src.app import app
+from src.utils.utils import create_access_token
 
 register(Users_factory)
 
@@ -50,7 +51,7 @@ def client(app_fixture: FastAPI):
     Base.metadata.create_all(bind=engine)
     with TestClient(app_fixture) as c:
         yield c
-    Base.metadata.drop_all(bind=engine)
+    # Base.metadata.drop_all(bind=engine)
 
 # Helper function for seeding data
 def persist_object(db: Session, obj):
@@ -77,3 +78,13 @@ def seed(request: pytest.FixtureRequest, persistent_db_session: Session):
             for attribute_set in overridden_attributes:
                 pytest.persist_object(persistent_db_session, factory(**attribute_set))
 
+
+
+@pytest.fixture
+def auth_headers():
+    user_id = 999 # The ID of the user you want to authenticate as
+    token = create_access_token(user_id)
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    return headers
