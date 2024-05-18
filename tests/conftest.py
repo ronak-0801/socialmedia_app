@@ -4,16 +4,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from typing import Any, Generator
 from database import Base, get_db
-from .seeding import Users_factory
-from .seeding import Otps_Factory
-
+from .seeding import Users_factory,Otps_Factory,Posts_Factory
 from .db import engine, TestingSessionLocal
 from pytest_factoryboy import register
 from src.app import app
-from src.utils.utils import create_access_token,create_access_token_from_refresh_token
+from src.utils.utils import create_access_token
 
 register(Users_factory)
 register(Otps_Factory)
+register(Posts_Factory)
 
 
 @pytest.fixture(scope="function")

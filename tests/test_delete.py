@@ -17,7 +17,7 @@ client = TestClient(app)
 @pytest.mark.parametrize('auth_headers', [1], indirect=True)
 
 def test_delete_user(seed, auth_headers):
-    response = client.delete('/delete_user',headers=auth_headers)
+    response = client.delete('/delete_user', headers=auth_headers)
     data = response.json()
 
     print(response.json())

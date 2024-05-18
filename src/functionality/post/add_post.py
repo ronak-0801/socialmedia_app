@@ -12,12 +12,13 @@ def add_posts(request:Post_schema ,user_id:int, db: session=Depends(get_db)):
         user = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
         if user:
             post = Posts(post = request.post, caption=request.caption, total_like = request.total_like,uid = user_id)
+            # breakpoint()
             db.add(post)
             db.commit()
             db.refresh(post)
-            return post
+            return {"post": post}
         else :
-            return "User is deleted"
+            return "User is deleted or not found"
 
     except Exception as e:
         print("Error in adding the post ",e)

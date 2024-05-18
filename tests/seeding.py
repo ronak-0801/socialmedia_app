@@ -1,11 +1,15 @@
 # seeding.py
 
 import datetime
+import random
 import factory
 from faker import Factory as FakerFactory
+from src.resource.post.model import Posts
 from src.resource.authentication.model import User, Otp
 from factory.faker import Faker
 from pytest_factoryboy import register
+
+
 
 
 faker = FakerFactory.create()
@@ -30,7 +34,22 @@ class Otps_Factory(factory.Factory):
 
         
     email = factory.Faker('email')
-    otp = factory.Sequence(lambda n: f'{n:06d}')  # Generates a 6-digit OTP
+    otp = factory.Sequence(lambda n: f'{n:06d}') 
     expiration_time = factory.LazyFunction(lambda: datetime.datetime.utcnow())
+
+
+@register
+class Posts_Factory(factory.Factory):
+    class Meta:
+        model = Posts
+
+    post = Faker('sentence')
+    caption = Faker('sentence')
+    total_like = random.randint(0, 100)
+    uid = factory.SubFactory(Users_factory)
+    is_active = True
+    is_deleted = False
+    created_at = factory.LazyFunction(datetime.datetime.now)
+    updated_at = factory.LazyFunction(datetime.datetime.now)
     
 
