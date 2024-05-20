@@ -8,7 +8,7 @@ def get_user_data():
     user_data = {
             "name":"deadpool",
             "email": "ronakbabariya555@gmail.com",
-            "password": "chimichangas4life",
+            "password": "1234",
             "dob": "2024-05-14",
     }
     return user_data
