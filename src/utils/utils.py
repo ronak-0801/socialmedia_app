@@ -30,7 +30,7 @@ def create_refresh_token(user_id):
         to_encode = {
         "user_id":user_id,
         "token_type":"refresh"
-         }
+        }
         expire = datetime.datetime.utcnow() + datetime.timedelta(days=30)
         to_encode.update({"exp": expire})
         refresh_token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -45,7 +45,7 @@ def create_access_token_from_refresh_token(user_id):
         new_access_token = create_access_token(user_id)
         return {"new_access_token": new_access_token}
     except Exception as e:
-        print("Eroor in crsting access token from refresh token",e)
+        print("Error in creating access token from refresh token",e)
         raise
 
 

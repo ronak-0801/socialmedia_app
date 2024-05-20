@@ -18,14 +18,14 @@ def add_like(post_id:int,user_id:int ,db:session=Depends(get_db)):
                 db.query(Like).filter(Like.user_id == user_id, Like.post_user_id == post_id).delete()
                 post.total_like -= 1
                 db.commit()
-                return "post is unliked"
+                return {"post": "post is unliked"}
             else:    
                 like = Like(user_id = user_id,post_user_id = user)
                 db.add(like)
                 post.total_like += 1
                 db.commit()
                 db.refresh(like)
-                return "post is liked"
+                return {"post":"post is liked"}
         else:
             return "User is deleted"
 

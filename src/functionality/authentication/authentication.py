@@ -1,4 +1,6 @@
 from fastapi import  Depends, HTTPException
+from sqlalchemy.exc import IntegrityError  # Import the specific exception type
+
 from database import get_db
 from sqlalchemy.orm import session
 from fastapi.security import OAuth2PasswordBearer
@@ -47,7 +49,7 @@ def register_user(request:User_schema,db:session=Depends(get_db)):
 
         return {"message": "User registered. Verification email sent."}
     
-    except Exception as e:
+    except IntegrityError as e:
         print("Error registering user:", e)
         raise HTTPException(status_code=500, detail="Failed to register user")
 
@@ -80,19 +82,16 @@ def user_login(form_data: UserLoginSchema, db = Depends(get_db)):
 '''delete'''
 def delete(user_id , db = Depends(get_db)):
     try:
-        check_delete = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
-        if check_delete:
-            user = db.query(User).filter(User.id == user_id).first()
-            if not user:
-                raise HTTPException(status_code=404, detail="User not found")
-            
+        user = db.query(User).filter(User.id == user_id, User.is_deleted == False).first()
+        if user:
+
             user.is_deleted = True
             user.is_active = False
 
             db.commit()
             return {"message": "User deleted successfully"}
         else:
-            return "User is already deleted"
+            return HTTPException(status_code=404, detail="User not found")  
     except Exception as e:
         print("Error deleting user:", e)
         raise HTTPException(status_code=500, detail="Failed to delete user")
@@ -113,6 +112,7 @@ def send_verification_email(user_email, otp):
 def verify_email_with_otp(email: str, otp: str, db: session):
     try:
         user_otp = db.query(Otp).filter(Otp.email == email, Otp.otp == otp).first()
+
         if user_otp and not user_otp.is_expired():
             user = db.query(User).filter(User.email == email).first()
             if user:
@@ -124,9 +124,9 @@ def verify_email_with_otp(email: str, otp: str, db: session):
                 db.commit()
                 return {"success": True, "access_token": access_token, "refresh_token": refresh_token}
             else:
-                return False
+                return {"success":False}
         else:
-            return False
+            return {"success":False}
     except Exception as e:
         print("Error verifying email with OTP:", e)
         raise HTTPException(status_code=500, detail="Failed to verify email with OTP")

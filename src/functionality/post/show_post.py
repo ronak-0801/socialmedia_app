@@ -26,5 +26,3 @@ def post_from_user(user_id:int,db: session=Depends(get_db)):
         print("Eroor in showing post of user ",e)
         raise
 
-
-  
