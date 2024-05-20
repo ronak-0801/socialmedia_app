@@ -1,13 +1,14 @@
-
-
-from fastapi.testclient import TestClient
 import pytest
-
+from fastapi.testclient import TestClient
 from src.app import app
 from tests.data import SHARED_SEED_DATA
 
 client = TestClient(app)
 
+
+'''
+Verify email of user using otp testing
+'''
 @pytest.mark.seed_data(
     ("users", SHARED_SEED_DATA["users"]),
     ("otps", SHARED_SEED_DATA["otps"]),

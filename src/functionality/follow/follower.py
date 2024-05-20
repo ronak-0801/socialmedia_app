@@ -50,7 +50,7 @@ def show_following(user_id:int, db:session=Depends(get_db)):
 
             for follower in following:
                 list_of_follower.append(db.query(User).filter(User.id == follower.followed_to).first())
-            return  {"number_of_followers":count_following,
+            return  {"number_of_followings": count_following,
                     "following list":list_of_follower}
         else:
             return "User is deleted"

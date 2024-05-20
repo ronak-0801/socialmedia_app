@@ -1,20 +1,26 @@
 import pytest
+from src.app import app
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from typing import Any, Generator
 from database import Base, get_db
-from .seeding import Users_factory,Otps_Factory,Posts_Factory
 from .db import engine, TestingSessionLocal
 from pytest_factoryboy import register
-from src.app import app
 from src.utils.utils import create_access_token
+from .factories import Users_factory,Otps_Factory,Posts_Factory, Likes_Factory,Followers_Factory,Comments_Factory
 
 register(Users_factory)
 register(Otps_Factory)
 register(Posts_Factory)
+register(Likes_Factory)
+register(Followers_Factory)
+register(Comments_Factory)
 
 
+'''
+fixture for test database session 
+'''
 @pytest.fixture(scope="function")
 def persistent_db_session() -> Session: # type: ignore
     session = TestingSessionLocal()
@@ -23,7 +29,9 @@ def persistent_db_session() -> Session: # type: ignore
     finally:
         session.close()
 
-# Fixture for SQLAlchemy session with SQLite database
+''' 
+Fixture for SQLAlchemy session with SQLite database
+'''
 @pytest.fixture(scope="function")
 def db_session(persistent_db_session: Session) -> Generator[Session, Any, None]:
     try:
@@ -35,7 +43,9 @@ def db_session(persistent_db_session: Session) -> Generator[Session, Any, None]:
     finally:
         persistent_db_session.close()
 
-# Fixture for FastAPI app
+'''
+Fixture for FastAPI app
+'''
 @pytest.fixture(scope="function")
 def app_fixture(db_session: Session) -> Generator[FastAPI, Any, None]:
     def override_get_db():
@@ -47,7 +57,9 @@ def app_fixture(db_session: Session) -> Generator[FastAPI, Any, None]:
     app.dependency_overrides[get_db] = override_get_db
     yield app
 
-# # Fixture for TestClient
+'''
+Fixture for TestClient
+'''
 @pytest.fixture(scope="function", autouse=True)
 def client(app_fixture: FastAPI):
     Base.metadata.create_all(bind=engine)
@@ -55,7 +67,9 @@ def client(app_fixture: FastAPI):
         yield c
     Base.metadata.drop_all(bind=engine)
 
-# Helper function for seeding data
+'''
+Helper function for seeding data
+'''
 def persist_object(db: Session, obj):
     db.add(obj)
     db.commit()
@@ -63,7 +77,9 @@ def persist_object(db: Session, obj):
 
 pytest.persist_object = persist_object
 
-# Fixture for seeding data
+'''
+Fixture for seeding data
+'''
 @pytest.fixture
 def seed(request: pytest.FixtureRequest, persistent_db_session: Session):
     marker = request.node.get_closest_marker("seed_data")
@@ -81,7 +97,9 @@ def seed(request: pytest.FixtureRequest, persistent_db_session: Session):
                 pytest.persist_object(persistent_db_session, factory(**attribute_set))
 
 
-
+'''
+fixture for dyanamic token generation 
+'''
 @pytest.fixture
 def auth_headers(request):
     user_id = request.param

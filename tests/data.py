@@ -1,5 +1,4 @@
 import datetime
-import pytest
 import bcrypt
 
 
@@ -41,5 +40,59 @@ SHARED_SEED_DATA= {
             "otp": "123456",
             "expiration_time": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)  
         }
-    ]
+        ],
+        "posts": [
+            {
+                "id" : 1,
+                "post":1,
+                "caption" : "user 1",
+                "total_like" : 0,
+                "uid": 1,
+            },
+            {
+                "id" : 2,
+                "post":1,
+                "caption" : "user 2",
+                "total_like" : 1,
+                "uid": 2,
+            },
+        ],
+        "likes": [
+            {
+                "id":1,
+                "post_user_id" : 2,
+                "user_id":1
+            },
+            {
+                "id":2,
+                "post_user_id" : 1,
+                "user_id":2
+            }
+        ],
+        "followers":[
+            {
+                "id":1,
+                "followed_to":2,
+                "following_by":1
+            },
+            {
+                "id":2,
+                "followed_to":1,
+                "following_by":2
+            },
+        ],
+        "comment":[
+            {
+                "id":1,
+                "comment":"zdfdfsdf",
+                "post_id":2,
+                "user_id":1
+            },
+            {
+                "id":2,
+                "comment":"abababab",
+                "post_id":2,
+                "user_id":2
+            }
+        ]
 }

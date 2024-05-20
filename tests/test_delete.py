@@ -1,13 +1,13 @@
-
-from fastapi.testclient import TestClient
 import pytest
-
 from src.app import app
+from fastapi.testclient import TestClient
 from .data import SHARED_SEED_DATA
 
 client = TestClient(app)
 
-
+'''
+testing delete user
+'''
 @pytest.mark.seed_data(
     (
         "users",
@@ -26,6 +26,8 @@ def test_delete_user(seed, auth_headers):
     assert "User deleted successfully" == data["message"]
 
 
+
+'''testing user not found'''
 @pytest.mark.seed_data(
     (
         "users",

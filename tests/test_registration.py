@@ -1,11 +1,5 @@
-
 from fastapi.testclient import TestClient
-
 from src.app import app
-
-
-# from src.resource.authentication.model import User
-# from src.resource.authentication.schema import User_schema, UserLoginSchema, Email_schema, PasswordResetSchema, Passwordtokenschema
 
 
 client = TestClient(app) 
