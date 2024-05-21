@@ -4,7 +4,7 @@ from src.resource.post.model import Posts
 from src.resource.like.model import Like
 from src.resource.follow.model import Follower
 from src.resource.comment.model import Post_comment
-from src.resource.authentication.model import User, Otp
+from src.resource.authentication.model import User, Otp, PasswordReset
 from pytest_factoryboy import register
 
 
@@ -40,3 +40,7 @@ class Followers_Factory(factory.Factory):
 class Comments_Factory(factory.Factory):
     class Meta:
         model = Post_comment
+@register
+class Passwords_Factory(factory.Factory):
+    class Meta:
+        model = PasswordReset

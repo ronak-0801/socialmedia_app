@@ -8,7 +8,7 @@ from database import Base, get_db
 from .db import engine, TestingSessionLocal
 from pytest_factoryboy import register
 from src.utils.utils import create_access_token
-from .factories import Users_factory,Otps_Factory,Posts_Factory, Likes_Factory,Followers_Factory,Comments_Factory
+from .factories import Users_factory,Otps_Factory,Posts_Factory, Likes_Factory,Followers_Factory,Comments_Factory, Passwords_Factory
 
 register(Users_factory)
 register(Otps_Factory)
@@ -16,6 +16,7 @@ register(Posts_Factory)
 register(Likes_Factory)
 register(Followers_Factory)
 register(Comments_Factory)
+register(Passwords_Factory)
 
 
 '''

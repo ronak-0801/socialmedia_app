@@ -27,7 +27,8 @@ SHARED_SEED_DATA= {
             "id": 3,
             "name": "user3",
             "email": "user3@example.com",
-            "password":hash_password("abcd")
+            "password":hash_password("abcd"),
+            "is_active":False
         }],
         "otps": [
         {
@@ -41,6 +42,11 @@ SHARED_SEED_DATA= {
             "expiration_time": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)  
         }
         ],
+        "passwords": [
+        {
+            "email": "user1@example.com",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MTk3NjAyfQ.PdtUym5ojRHEzk5i-jfWvcecw4hUsC7gUMBl9YVQ6Ks",
+        }],
         "posts": [
             {
                 "id" : 1,
