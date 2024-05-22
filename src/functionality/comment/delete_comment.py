@@ -2,7 +2,7 @@
 from src.resource.post.model import Posts
 from src.resource.comment.model import Post_comment
 from sqlalchemy.orm import session
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from database import get_db
 from src.resource.authentication.model import User
 
@@ -34,10 +34,10 @@ def deleting_comment(comment_id:int,user_id:int, db:session=Depends(get_db)):
             else:
                 return "comment does not exist for deleting"
         else:
-            return "User is deleted"
+            raise HTTPException(status_code=500, detail="Failed to delete comment, user is deleted")
     except Exception as e:
         print("error in deleting comment",e)
-        raise
+        raise HTTPException(status_code=500, detail="Failed to delete comment")
 
 
 

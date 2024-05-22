@@ -1,7 +1,7 @@
 from src.resource.like.model import Like
 from src.resource.post.model import Posts
 from sqlalchemy.orm import session
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from database import get_db
 from src.resource.authentication.model import User
 
@@ -27,10 +27,11 @@ def add_like(post_id:int,user_id:int ,db:session=Depends(get_db)):
                 db.refresh(like)
                 return {"post":"post is liked"}
         else:
-            return "User is deleted"
-
+            raise Exception 
     except Exception as e:
-        print("Failed to like ",e)
-        raise
+        print("failed to like",e)
+        raise HTTPException(status_code=500, detail="user not found ")
+    
+
 
     

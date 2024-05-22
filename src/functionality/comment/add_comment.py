@@ -1,6 +1,6 @@
 from src.resource.comment.schema import Comment_schema
 from sqlalchemy.orm import session
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from database import get_db
 from src.resource.post.model import Posts
 from src.resource.comment.model import Post_comment
@@ -21,7 +21,7 @@ def adding_comment(request:Comment_schema,post_id:int,user_id:int,db:session=Dep
 
             return "Comments added successfully"    
         else:
-            return "User is deleted"
+            raise HTTPException(status_code=500, detail="Failed to add comment, user is deleted")
     except Exception as e:
-        print("Failed to add comment ",e)
-        raise
+        # print("Failed to add comment ",e)
+        raise HTTPException(status_code=500, detail="Failed to add comment")

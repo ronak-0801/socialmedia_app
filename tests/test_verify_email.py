@@ -26,3 +26,18 @@ def test_verify_email_endpoint(client, seed):
     assert data["message"] == "Email verified successfully"
     assert "access_token" in data
     assert "refresh_token" in data
+
+@pytest.mark.seed_data(
+    ("users", SHARED_SEED_DATA["users"]),
+    ("otps", SHARED_SEED_DATA["otps"]),
+)
+def test_verify_email_exception(client, seed):
+    email_verification_data = {
+        "email": "user@example.com",
+        "otp": "123456"
+    }
+
+    response = client.post("/verify_email", json=email_verification_data)
+
+    print( response.json())
+    assert response.status_code == 500

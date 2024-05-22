@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import session
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from database import get_db
 from src.resource.post.model import Posts
 from src.resource.authentication.model import User
@@ -20,9 +20,9 @@ def post_from_user(user_id:int,db: session=Depends(get_db)):
                 })
             return posts_of_user
         else :
-            return "User is deleted"
-
+            raise Exception 
     except Exception as e:
-        print("Eroor in showing post of user ",e)
-        raise
+        print("error showing post",e)
+        raise HTTPException(status_code=500, detail="Failed to show post")
+    
 

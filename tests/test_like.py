@@ -33,3 +33,14 @@ def test_remove_like(seed, auth_headers):
     response = client.post('/addlike/1', headers=auth_headers)
     print(response.json())
     assert "post" in response.json()
+
+@pytest.mark.seed_data(
+    ("users", SHARED_SEED_DATA["users"]),
+    ("posts", SHARED_SEED_DATA["posts"]),
+)
+@pytest.mark.parametrize('auth_headers', [1000],indirect=True)
+def test_add_like_exception(seed, auth_headers):
+    response = client.post('/addlike/100', headers=auth_headers)
+    print(response.json())
+    assert "user not found " in response.json()['detail']
+    

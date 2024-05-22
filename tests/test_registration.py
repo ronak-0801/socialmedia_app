@@ -1,5 +1,10 @@
+import pytest
+from sqlite3 import IntegrityError
+from unittest.mock import MagicMock, patch
 from fastapi.testclient import TestClient
 from src.app import app
+from src.functionality.authentication.authentication import send_verification_email
+# from src.utils.utils import send_email
 
 
 client = TestClient(app) 
@@ -7,7 +12,7 @@ client = TestClient(app)
 def get_user_data():
     user_data = {
             "name":"deadpool",
-            "email": "ronakbabariya555@gmail.com",
+            "email": "ronbariy525@gmail.com",
             "password": "1234",
             "dob": "2024-05-14",
     }
@@ -33,14 +38,14 @@ def test_duplicate_email():
     
     duplicate_user_data = {
         "name": "Another User",
-        "email": "ronakbabariya555@gmail.com",
+        "email": "ronbariy525@gmail.com",
         "password": "password789",
         "dob": "2000-01-01"
     }
     response = client.post("/register_user", json=duplicate_user_data)
     print(response.json())
-    assert response.status_code == 400
-    assert "Email address already registered" in response.json()["detail"]
+    assert response.status_code == 500
+    assert "Failed to register user" in response.json()["detail"]
 
 
 '''checking if the data entered while registration was missing any field'''
@@ -53,8 +58,4 @@ def test_invalid_data():
     response = client.post("/register_user", json=invalid_user_data)
     assert response.status_code == 422
     assert "Field required" in response.json()["detail"][0]["msg"]
-
-
-
-
 

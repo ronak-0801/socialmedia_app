@@ -38,6 +38,6 @@ class PasswordReset(Base):
     expiration_time = Column(DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(hours=1))
 
     def is_expired(self):
-        return datetime.datetime.now() > self.expiration_time
+        return datetime.datetime.utcnow() > self.expiration_time
 
 

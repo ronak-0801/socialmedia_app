@@ -1,6 +1,4 @@
 from fastapi import  Depends, HTTPException
-from sqlalchemy.exc import IntegrityError  # Import the specific exception type
-
 from database import get_db
 from sqlalchemy.orm import session
 from fastapi.security import OAuth2PasswordBearer
@@ -49,7 +47,7 @@ def register_user(request:User_schema,db:session=Depends(get_db)):
 
         return {"message": "User registered. Verification email sent."}
     
-    except IntegrityError as e:
+    except Exception as e:
         print("Error registering user:", e)
         raise HTTPException(status_code=500, detail="Failed to register user")
 
@@ -63,16 +61,16 @@ def user_login(form_data: UserLoginSchema, db = Depends(get_db)):
         user = db.query(User).filter(User.name == form_data.username, User.is_deleted == False).first()
         if user:
             if not user.is_active:
-                raise HTTPException(status_code=403, detail="User account is deactivated")
+                return HTTPException(status_code=403, detail="User account is deactivated")
             
             if not user or not verify_password(form_data.password, user.password):
-                raise HTTPException(status_code=401, detail="Incorrect email or password")
+                return HTTPException(status_code=401, detail="Incorrect email or password")
             
             access_token = create_access_token(user.id)
             refresh_token = create_refresh_token(user.id)
             return {"access_token": access_token, "refresh_token": refresh_token}
         else:
-            return "User not found"
+            raise  "User not found" 
     except Exception as e:
         print("Error during user login:", e)
         raise HTTPException(status_code=500, detail="Failed to login user")
@@ -91,7 +89,7 @@ def delete(user_id , db = Depends(get_db)):
             db.commit()
             return {"message": "User deleted successfully"}
         else:
-            return HTTPException(status_code=404, detail="User not found")  
+            raise HTTPException(status_code=404, detail="User not found")  
     except Exception as e:
         print("Error deleting user:", e)
         raise HTTPException(status_code=500, detail="Failed to delete user")
@@ -126,7 +124,7 @@ def verify_email_with_otp(email: str, otp: str, db: session):
             else:
                 return {"success":False}
         else:
-            return {"success":False}
+            raise HTTPException
     except Exception as e:
         print("Error verifying email with OTP:", e)
         raise HTTPException(status_code=500, detail="Failed to verify email with OTP")
