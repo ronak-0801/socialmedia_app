@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import session
 from database import get_db
 from src.resource.follow.model import Follower
@@ -14,10 +14,10 @@ def add_follower( followed_to:int,following_user:int, db:session=Depends(get_db)
             db.commit()
             return "successfully followed user"
         else:
-            return "User is deleted"
+            raise Exception 
     except Exception as e:
         print("Failed to follow",e)
-        raise
+        raise HTTPException(status_code=500, detail="Failed to follow user")
         
 def show_follower(user_id:int, db:session=Depends(get_db)):
     
@@ -33,11 +33,10 @@ def show_follower(user_id:int, db:session=Depends(get_db)):
             return  {"number_of_followers":count_follower,
                     "follower list":list_of_follower}
         else:
-            return "User is deleted"
-
+            raise Exception 
     except Exception as e:
-        print("Error in showing follower",e)
-        raise
+        print("error showing follower",e)
+        raise HTTPException(status_code=500, detail="Failed to show follower")
     
 
 def show_following(user_id:int, db:session=Depends(get_db)):
@@ -53,10 +52,10 @@ def show_following(user_id:int, db:session=Depends(get_db)):
             return  {"number_of_followings": count_following,
                     "following list":list_of_follower}
         else:
-            return "User is deleted"
-
+            raise Exception 
     except Exception as e:
-        print("Error in showing following",e)
-        raise
+        print("error showing follower",e)
+        raise HTTPException(status_code=500, detail="Failed to show following")
+    
 
 

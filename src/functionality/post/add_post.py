@@ -1,6 +1,6 @@
 from src.resource.post.schema import Post_schema 
 from sqlalchemy.orm import session
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from database import get_db
 from src.resource.post.model import Posts
 from src.resource.authentication.model import User
@@ -18,9 +18,9 @@ def add_posts(request:Post_schema ,user_id:int, db: session=Depends(get_db)):
             db.refresh(post)
             return {"post": post}
         else :
-            return "User is deleted or not found"
-
+            raise Exception 
     except Exception as e:
-        print("Error in adding the post ",e)
-        raise
+        print("User is deleted",e)
+        raise HTTPException(status_code=500, detail="Failed to add post")
+    
 

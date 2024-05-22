@@ -86,7 +86,6 @@ def seed(request: pytest.FixtureRequest, persistent_db_session: Session):
     marker = request.node.get_closest_marker("seed_data")
     if not (marker and marker.args and isinstance(marker.args, tuple)):
         assert False
-
     for dataset in marker.args:
         entity_name, overridden_attributes = dataset
 

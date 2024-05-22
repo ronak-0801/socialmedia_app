@@ -48,7 +48,7 @@ def test_add_post_user_not_found(seed,auth_headers):
     }
     response = client.post('/addpost', headers=auth_headers, json=data)
     print(response.json())
-    assert "User is deleted or not found" in response.json()
+    assert "Failed to add post" in response.json()['detail']
 
 
 
@@ -66,3 +66,13 @@ def test_show_post(seed,auth_headers):
     assert 'post' in response.json()[0]
     assert 'caption' in response.json()[0]
     assert 'total_like' in response.json()[0]
+
+@pytest.mark.seed_data(
+    ("users", SHARED_SEED_DATA["users"]),
+    ("posts", SHARED_SEED_DATA["posts"]),
+)
+@pytest.mark.parametrize('auth_headers', [1000], indirect=True)
+def test_show_post_exception(seed,auth_headers):
+    response = client.get('allpost', headers=auth_headers)
+    print(response.json())
+    assert "Failed to show post" in response.json()['detail']

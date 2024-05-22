@@ -1,6 +1,4 @@
 from fastapi import  Depends, HTTPException
-from sqlalchemy.exc import IntegrityError  # Import the specific exception type
-
 from database import get_db
 from sqlalchemy.orm import session
 from fastapi.security import OAuth2PasswordBearer
@@ -145,7 +143,6 @@ def password_reset(request: PasswordResetSchema, db: session = Depends(get_db)):
         new_password = request.new_password
         
         password_reset = db.query(PasswordReset).filter(PasswordReset.email == email, PasswordReset.token == token).first()
-        # breakpoint()
         if password_reset and not password_reset.is_expired():
             user = db.query(User).filter(User.email == email).first()
             if user:
